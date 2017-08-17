@@ -5,6 +5,11 @@ namespace PendoNL\LaravelExactOnline\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use PendoNL\LaravelExactOnline\LaravelExactOnline;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\MessageFormatter;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
 
 class LaravelExactOnlineServiceProvider extends ServiceProvider
 {
@@ -40,6 +45,15 @@ class LaravelExactOnlineServiceProvider extends ServiceProvider
             $config = LaravelExactOnline::loadConfig();
 
             $connection = new \Picqer\Financials\Exact\Connection();
+            $logger = new Logger('EXACT API');
+            $logger->pushHandler(new StreamHandler(storage_path().'/logs/laravel-' . date('Y-m-d') . '.log', Logger::DEBUG));
+            $logger->pushHandler(new FirePHPHandler());
+
+            $middleware = Middleware::log(
+                $logger,
+                new MessageFormatter('method: {method} uri: {uri} body:{req_body} - response:{res_body}')
+            );
+            $connection->insertMiddleWare($middleware);
             $connection->setRedirectUrl(route('exact.callback'));
             $connection->setExactClientId(config('laravel-exact-online.exact_client_id'));
             $connection->setExactClientSecret(config('laravel-exact-online.exact_client_secret'));
