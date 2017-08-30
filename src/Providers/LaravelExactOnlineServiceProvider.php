@@ -72,7 +72,7 @@ class LaravelExactOnlineServiceProvider extends ServiceProvider
                 $connection->setRefreshToken($config->exact_refreshToken);
             }
             if(isset($config->exact_tokenExpires)) {
-                $connection->setTokenExpires($config->exact_tokenExpires);
+                // $connection->setTokenExpires($config->exact_tokenExpires);
             }
 
             try {
@@ -85,14 +85,14 @@ class LaravelExactOnlineServiceProvider extends ServiceProvider
                     $config->exact_tokenExpires = $connection->getTokenExpires();
 
                     LaravelExactOnline::storeConfig($config);
-
-                    return $connection;
                 }
 
             } catch (\Exception $e)
             {
                 throw new \Exception('Could not connect to Exact: ' . $e->getMessage());
             }
+            
+			return $connection;
         });
     }
 }
