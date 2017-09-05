@@ -51,7 +51,7 @@ class LaravelExactOnlineServiceProvider extends ServiceProvider
 
             $middleware = Middleware::log(
                 $logger,
-                new MessageFormatter('method: {method} uri: {uri} body:{req_body} - response:{res_body}')
+                new MessageFormatter('method: {method} uri: {uri} body:{req_body} - response:{res_body} headers:{req_headers} - response:{res_headers}')
             );
             $connection->insertMiddleWare($middleware);
             $connection->setRedirectUrl(route('exact.callback'));
@@ -91,7 +91,7 @@ class LaravelExactOnlineServiceProvider extends ServiceProvider
             {
                 throw new \Exception('Could not connect to Exact: ' . $e->getMessage());
             }
-            
+
 			return $connection;
         });
     }
