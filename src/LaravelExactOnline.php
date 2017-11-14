@@ -73,4 +73,19 @@ class LaravelExactOnline
         }
     }
 
+    public static function resetConfig()
+    {
+        $config->exact_accessToken = null;
+        $config->exact_refreshToken = null;
+        $config->exact_tokenExpires = null;
+        $config->exact_authorisationCode = null;
+
+        if(config('laravel-exact-online.exact_multi_user')) {
+            $config->save();
+        } else {
+            $file = storage_path('exact.api.json');
+            File::put($file, json_encode($config));
+        }
+    }
+
 }

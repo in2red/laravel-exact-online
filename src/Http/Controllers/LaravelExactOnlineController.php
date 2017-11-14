@@ -20,6 +20,7 @@ class LaravelExactOnlineController extends Controller
      * Sends an oAuth request to the Exact App to get tokens
      */
     public function appAuthorize() {
+        LaravelExactOnline::resetConfig();
         $connection = app()->make('Exact\Connection');
         $connection->redirectForAuthorization();
     }
