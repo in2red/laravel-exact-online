@@ -75,6 +75,7 @@ class LaravelExactOnline
 
     public static function resetConfig()
     {
+        $config = self::loadConfig();
         $config->exact_accessToken = null;
         $config->exact_refreshToken = null;
         $config->exact_tokenExpires = null;
